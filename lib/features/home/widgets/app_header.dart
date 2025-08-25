@@ -37,23 +37,11 @@ class AppHeader extends ConsumerWidget {
               onTap: () => context.go(AppRoutes.landing),
               child: Row(
                 children: [
-                  // Logo
-                  Container(
+                  Image.asset(
+                    'assets/images/logo.png',
                     width: 32,
                     height: 32,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF10b981), Color(0xFF34d399)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.home,
-                      color: Colors.white,
-                      size: 20,
-                    ),
+                    fit: BoxFit.contain,
                   ),
                   const SizedBox(width: 12),
 

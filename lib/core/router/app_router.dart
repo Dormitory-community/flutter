@@ -10,7 +10,7 @@ import '../../features/home/screens/main_scaffold.dart';
 import '../../features/boards/screens/boards_screen.dart';
 // import '../../features/boards/screens/board_detail_screen.dart';
 // import '../../features/boards/screens/board_write_screen.dart';
-// import '../../features/groups/screens/groups_screen.dart';
+import '../../features/groups/screens/groups_screen.dart';
 // import '../../features/groups/screens/group_detail_screen.dart';
 // import '../../features/groups/screens/group_write_screen.dart';
 // import '../../features/account/screens/my_page_screen.dart';
@@ -106,12 +106,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               child: BoardsScreen(),
             ),
           ),
-          // GoRoute(
-          //   path: AppRoutes.groups,
-          //   pageBuilder: (context, state) => const NoTransitionPage(
-          //     child: GroupsScreen(),
-          //   ),
-          // ),
+          GoRoute(
+            path: AppRoutes.groups,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: GroupsScreen(),
+            ),
+          ),
           // GoRoute(
           //   path: AppRoutes.myPage,
           //   pageBuilder: (context, state) => const NoTransitionPage(
