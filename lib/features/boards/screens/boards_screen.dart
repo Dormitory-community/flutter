@@ -27,7 +27,8 @@ final postsProvider = StateProvider<List<PostListModel>>((ref) {
     PostListModel(
       id: '1',
       title: '기숙사 생활 꿀팁 공유해요!',
-      content: '기숙사에서 1년 넘게 살면서 터득한 생활 꿀팁들을 공유합니다. 세탁실 이용 시간대, 공부하기 좋은 장소, 야식 주문 꿀팁 등등...',
+      content:
+      '기숙사에서 1년 넘게 살면서 터득한 생활 꿀팁들을 공유합니다. 세탁실 이용 시간대, 공부하기 좋은 장소, 야식 주문 꿀팁 등등 알려줄수 있어요 저한테 쪽지 주시면 다양한 정보를 드르도록 하겠습니다.',
       author: mockUser1,
       createdAt: DateTime(2024, 7, 20, 10, 0, 0),
       updatedAt: DateTime(2024, 7, 20, 10, 0, 0),
@@ -36,11 +37,13 @@ final postsProvider = StateProvider<List<PostListModel>>((ref) {
       tags: ['꿀팁', '생활정보', '기숙사'],
       views: 150,
       commentsCount: 3,
+      thumbnailImage: "https://os.catdogeats.shop/images/cat_in_box.jpg",
     ),
     PostListModel(
       id: '2',
       title: '오늘 점심 뭐 먹지? 추천 받아요!',
-      content: '학교 근처에서 점심 먹을 곳 추천해주세요! 한식, 양식, 일식 다 좋아요. 혼밥하기 좋은 곳도 환영입니다!',
+      content:
+      '학교 근처에서 점심 먹을 곳 추천해주세요! 한식, 양식, 일식 다 좋아요. 혼밥하기 좋은 곳도 환영입니다!',
       author: mockUser2,
       createdAt: DateTime(2024, 7, 19, 12, 0, 0),
       updatedAt: DateTime(2024, 7, 19, 12, 0, 0),
@@ -53,7 +56,50 @@ final postsProvider = StateProvider<List<PostListModel>>((ref) {
     PostListModel(
       id: '3',
       title: '새 학기 스터디 그룹 모집',
-      content: '새 학기를 맞아 함께 공부할 스터디 그룹을 모집합니다. 주 3회, 평일 저녁 시간대로 진행할 예정입니다.',
+      content:
+      '새 학기를 맞아 함께 공부할 스터디 그룹을 모집합니다. 주 3회, 평일 저녁 시간대로 진행할 예정입니다.',
+      author: mockUser1,
+      createdAt: DateTime(2024, 7, 18, 15, 30, 0),
+      updatedAt: DateTime(2024, 7, 18, 15, 30, 0),
+      category: '정보 공유',
+      likes: 32,
+      tags: ['스터디', '그룹', '모집'],
+      views: 89,
+      commentsCount: 7,
+    ),
+    PostListModel(
+      id: '4',
+      title: '새 학기 스터디 그룹 모집',
+      content:
+      '새 학기를 맞아 함께 공부할 스터디 그룹을 모집합니다. 주 3회, 평일 저녁 시간대로 진행할 예정입니다.',
+      author: mockUser1,
+      createdAt: DateTime(2024, 7, 18, 15, 30, 0),
+      updatedAt: DateTime(2024, 7, 18, 15, 30, 0),
+      category: '정보 공유',
+      likes: 32,
+      tags: ['스터디', '그룹', '모집'],
+      views: 89,
+      commentsCount: 7,
+    ),
+    PostListModel(
+      id: '5',
+      title: '새 학기 스터디 그룹 모집',
+      content:
+      '새 학기를 맞아 함께 공부할 스터디 그룹을 모집합니다. 주 3회, 평일 저녁 시간대로 진행할 예정입니다.',
+      author: mockUser1,
+      createdAt: DateTime(2024, 7, 18, 15, 30, 0),
+      updatedAt: DateTime(2024, 7, 18, 15, 30, 0),
+      category: '정보 공유',
+      likes: 32,
+      tags: ['스터디', '그룹', '모집'],
+      views: 89,
+      commentsCount: 7,
+    ),
+    PostListModel(
+      id: '6',
+      title: '새 학기 스터디 그룹 모집',
+      content:
+      '새 학기를 맞아 함께 공부할 스터디 그룹을 모집합니다. 주 3회, 평일 저녁 시간대로 진행할 예정입니다.',
       author: mockUser1,
       createdAt: DateTime(2024, 7, 18, 15, 30, 0),
       updatedAt: DateTime(2024, 7, 18, 15, 30, 0),
@@ -71,9 +117,12 @@ final selectedCategoryProvider = StateProvider<String>((ref) => '전체');
 class BoardsScreen extends ConsumerWidget {
   const BoardsScreen({super.key});
 
+  static const double _maxContentWidth = 900; // 원하는 max width
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final posts = ref.watch(postsProvider);
+
     final selectedCategory = ref.watch(selectedCategoryProvider);
 
     final categories = ['전체', '자유게시판', '정보 공유', '고민 상담'];
@@ -86,38 +135,49 @@ class BoardsScreen extends ConsumerWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
         children: [
-          // Category Filter
-          Container(
-            height: 60,
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                final category = categories[index];
-                final isSelected = category == selectedCategory;
+          // Category Filter (centered and constrained to max width)
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+              child: Container(
+                height: 60,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+                    final isSelected = category == selectedCategory;
 
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: FilterChip(
-                    label: Text(category),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      ref.read(selectedCategoryProvider.notifier).state = category;
-                    },
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    selectedColor: Theme.of(context).colorScheme.primaryContainer,
-                    checkmarkColor: Theme.of(context).colorScheme.primary,
-                    labelStyle: TextStyle(
-                      color: isSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.onSurface,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    ),
-                  ),
-                );
-              },
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: FilterChip(
+                        label: Text(category),
+                        selected: isSelected,
+                        onSelected: (selected) {
+                          ref.read(selectedCategoryProvider.notifier).state = category;
+                        },
+                        backgroundColor: Theme.of(context).colorScheme.surface,
+                        selectedColor: Theme.of(context).colorScheme.surface,   // 선택시에도 배경 변화 없음
+                        checkmarkColor: Theme.of(context).colorScheme.primary,
+                        side: BorderSide(
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.primary // 선택 시 테두리 색
+                              : Theme.of(context).colorScheme.outline, // 비선택 시 테두리 색
+                          width: 1.2,
+                        ),
+                        labelStyle: TextStyle(
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurface,
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
 
@@ -133,14 +193,22 @@ class BoardsScreen extends ConsumerWidget {
                 itemCount: filteredPosts.length,
                 itemBuilder: (context, index) {
                   final post = filteredPosts[index];
-                  return PostCard(
-                    post: post,
-                    onTap: () {
-                      context.push(
-                        AppRoutes.boardDetail.replaceAll(':id', post.id),
-                      );
-                    },
-                    showCategory: selectedCategory == '전체',
+
+                  // 각 카드 중앙 정렬 + 최대 너비 적용
+                  return Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+                      child: PostCard(
+                        post: post,
+                        onTap: () {
+                          context.push(
+                            AppRoutes.boardDetail.replaceAll(':id', post.id),
+                          );
+                        },
+                        showCategory: selectedCategory == '전체',
+                        dense: true,
+                      ),
+                    ),
                   );
                 },
               ),
@@ -148,15 +216,18 @@ class BoardsScreen extends ConsumerWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          _showWriteOptions(context);
-        },
-        icon: const Icon(Icons.edit),
-        label: const Text('글쓰기'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
+      floatingActionButton: SizedBox(
+        height: 40,                // 버튼 높이
+        // width 생략하면 내부 콘텐츠에 따라 결정
+        child: FloatingActionButton.extended(
+          onPressed: () => _showWriteOptions(context),
+          icon: const Icon(Icons.edit, size: 16),
+          label: const Text('글쓰기', style: TextStyle(fontSize: 12)),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Colors.white,
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -246,11 +317,7 @@ class _WriteOptionTile extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border.all(
-            color: Theme
-                .of(context)
-                .colorScheme
-                .outline
-                .withOpacity(0.3),
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
           ),
           borderRadius: BorderRadius.circular(12),
         ),
@@ -259,19 +326,12 @@ class _WriteOptionTile extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme
-                    .of(context)
-                    .colorScheme
-                    .primaryContainer
-                    .withOpacity(0.3),
+                color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 icon,
-                color: Theme
-                    .of(context)
-                    .colorScheme
-                    .primary,
+                color: Theme.of(context).colorScheme.primary,
                 size: 24,
               ),
             ),
@@ -282,27 +342,15 @@ class _WriteOptionTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(
-                      color: Theme
-                          .of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.7),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                     ),
                   ),
                 ],
@@ -311,11 +359,7 @@ class _WriteOptionTile extends StatelessWidget {
             Icon(
               Icons.arrow_forward_ios,
               size: 16,
-              color: Theme
-                  .of(context)
-                  .colorScheme
-                  .onSurface
-                  .withOpacity(0.5),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
             ),
           ],
         ),
