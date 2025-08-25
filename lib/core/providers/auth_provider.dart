@@ -45,6 +45,10 @@ class AuthNotifier extends StateNotifier<AsyncValue<UserModel?>> {
       );
 
       if (response.user != null) {
+        if (response.user!.emailConfirmedAt == null) {
+          throw Exception('이메일 인증이 필요합니다. 이메일을 확인해주세요.');
+        }
+
         state = AsyncValue.data(UserModel.fromSupabaseUser(response.user!));
       } else {
         throw Exception('로그인에 실패했습니다.');

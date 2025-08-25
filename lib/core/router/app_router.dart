@@ -11,8 +11,8 @@ import '../../features/boards/screens/boards_screen.dart';
 // import '../../features/boards/screens/board_detail_screen.dart';
 // import '../../features/boards/screens/board_write_screen.dart';
 import '../../features/groups/screens/groups_screen.dart';
-// import '../../features/groups/screens/group_detail_screen.dart';
-// import '../../features/groups/screens/group_write_screen.dart';
+import '../../features/groups/screens/group_detail_screen.dart';
+import '../../features/groups/screens/group_write_screen.dart';
 // import '../../features/account/screens/my_page_screen.dart';
 // import '../../features/account/screens/posts_screen.dart';
 // import '../../features/account/screens/comments_screen.dart';
@@ -194,39 +194,39 @@ final routerProvider = Provider<GoRouter>((ref) {
   //         );
   //       },
   //     ),
-  //     GoRoute(
-  //       path: AppRoutes.groupDetail,
-  //       pageBuilder: (context, state) {
-  //         final id = state.pathParameters['id']!;
-  //         return CustomTransitionPage(
-  //           child: GroupDetailScreen(id: id),
-  //           transitionDuration: const Duration(milliseconds: 300),
-  //           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //             return SlideTransition(
-  //               position: animation.drive(
-  //                 Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
-  //               ),
-  //               child: child,
-  //             );
-  //           },
-  //         );
-  //       },
-  //     ),
-  //     GoRoute(
-  //       path: AppRoutes.groupWrite,
-  //       pageBuilder: (context, state) => CustomTransitionPage(
-  //         child: const GroupWriteScreen(),
-  //         transitionDuration: const Duration(milliseconds: 300),
-  //         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //           return SlideTransition(
-  //             position: animation.drive(
-  //               Tween(begin: const Offset(0.0, 1.0), end: Offset.zero),
-  //             ),
-  //             child: child,
-  //           );
-  //         },
-  //       ),
-  //     ),
+      GoRoute(
+        path: AppRoutes.groupDetail,
+        pageBuilder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return CustomTransitionPage(
+            child: GroupDetailScreen(id: id),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return SlideTransition(
+                position: animation.drive(
+                  Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
+                ),
+                child: child,
+              );
+            },
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.groupWrite,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const GroupWriteScreen(),
+          transitionDuration: const Duration(milliseconds: 300),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SlideTransition(
+              position: animation.drive(
+                Tween(begin: const Offset(0.0, 1.0), end: Offset.zero),
+              ),
+              child: child,
+            );
+          },
+        ),
+      ),
   //     GoRoute(
   //       path: AppRoutes.messageDetail,
   //       pageBuilder: (context, state) {

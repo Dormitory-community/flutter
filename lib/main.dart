@@ -14,6 +14,9 @@ import 'core/utils/timeago_localization.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // 환경 변수 검증
+  AppConfig.validateConfig();
+
   // 상태바 투명하게 설정
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
