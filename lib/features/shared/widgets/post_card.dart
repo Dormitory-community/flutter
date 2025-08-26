@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../../core/models/post_models.dart';
+import '../../../core/models/post_model.dart';
 
 class PostCard extends StatelessWidget {
   const PostCard({

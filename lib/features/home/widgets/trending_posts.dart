@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/router/app_router.dart';
-import '../../../core/models/post_models.dart';
+import '../../../core/models/post_model.dart';
 import '../../../core/models/user_model.dart';
 import '../../shared/widgets/post_card.dart';
 

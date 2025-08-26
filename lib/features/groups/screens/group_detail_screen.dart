@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../widgets/share_menu.dart';
 
 class GroupDetailScreen extends StatelessWidget {

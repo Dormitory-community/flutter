@@ -40,14 +40,14 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
     if (path == AppRoutes.landing || path == '/') return 0;
     if (path == AppRoutes.groups || path.startsWith('/groups')) return 1;
     if (path == AppRoutes.boards || path.startsWith('/boards')) return 2;
-    if (path == AppRoutes.myPageMessages || path.startsWith('/my-page/chat')) return 3;
+    if (path == AppRoutes.chatRooms || path.startsWith('/my-page/chats')) return 3;
     if (path == AppRoutes.myPage || path.startsWith('/my-page')) return 4;
     return 0;
   }
 
   bool _shouldShowHeader() {
     final location = GoRouterState.of(context).uri.path;
-    final hiddenRoutes = [AppRoutes.login, AppRoutes.myPageMessages];
+    final hiddenRoutes = [AppRoutes.login, AppRoutes.chatRooms];
     return !hiddenRoutes.any((route) => location.startsWith(route));
   }
 
@@ -162,7 +162,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
         context.go(AppRoutes.boards);
         break;
       case 3:
-        context.go(AppRoutes.myPageMessages);
+        context.go(AppRoutes.chatRooms);
         break;
       case 4:
         context.go(AppRoutes.myPage);

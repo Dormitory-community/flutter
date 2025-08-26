@@ -18,8 +18,8 @@ import '../../features/groups/screens/group_write_screen.dart';
 // import '../../features/account/screens/comments_screen.dart';
 // import '../../features/account/screens/bookmarks_screen.dart';
 // import '../../features/account/screens/privacy_screen.dart';
-// import '../../features/messages/screens/chat_rooms_screen.dart';
-// import '../../features/messages/screens/messages_screen.dart';
+import '../../features/chats/screens/chat_room_screen.dart';
+import '../../features/chats/screens/chat_message_screen.dart';
 // import '../../features/search/screens/search_screen.dart';
 // import '../../features/notices/screens/notices_screen.dart';
 // import '../../shared/screens/error_screen.dart';
@@ -39,12 +39,13 @@ class AppRoutes {
   static const String myPageComments = '/my-page/comments';
   static const String myPageBookmarks = '/my-page/bookmarks';
   static const String myPagePrivacy = '/my-page/privacy';
-  static const String myPageMessages = '/my-page/chat';
-  static const String messageDetail = '/my-page/chat/:id';
+  static const String chatRooms = '/chats';
+  static const String messageDetail = '/chats/:id';
   static const String search = '/search';
   static const String notices = '/notices';
 
   static String groupDetailPath(String id) => '/groups/$id';
+  static String messageDetailPath(String id) => '/chats/$id';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -69,7 +70,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         AppRoutes.myPageComments,
         AppRoutes.myPageBookmarks,
         AppRoutes.myPagePrivacy,
-        AppRoutes.myPageMessages,
+        AppRoutes.chatRooms,
       ];
 
       final currentPath = state.uri.path;
@@ -121,12 +122,12 @@ final routerProvider = Provider<GoRouter>((ref) {
           //     child: MyPageScreen(),
           //   ),
           // ),
-          // GoRoute(
-          //   path: AppRoutes.myPageMessages,
-          //   pageBuilder: (context, state) => const NoTransitionPage(
-          //     child: ChatRoomsScreen(),
-          //   ),
-          // ),
+          GoRoute(
+            path: AppRoutes.chatRooms,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: ChatRoomsScreen(),
+            ),
+          ),
         ],
       ),
 
@@ -230,24 +231,24 @@ final routerProvider = Provider<GoRouter>((ref) {
           },
         ),
       ),
-  //     GoRoute(
-  //       path: AppRoutes.messageDetail,
-  //       pageBuilder: (context, state) {
-  //         final id = state.pathParameters['id']!;
-  //         return CustomTransitionPage(
-  //           child: MessagesScreen(chatId: id),
-  //           transitionDuration: const Duration(milliseconds: 300),
-  //           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //             return SlideTransition(
-  //               position: animation.drive(
-  //                 Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
-  //               ),
-  //               child: child,
-  //             );
-  //           },
-  //         );
-  //       },
-  //     ),
+      GoRoute(
+        path: AppRoutes.messageDetail,
+        pageBuilder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return CustomTransitionPage(
+            child: ChatMessageScreen(chatRoomId: id),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return SlideTransition(
+                position: animation.drive(
+                  Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
+                ),
+                child: child,
+              );
+            },
+          );
+        },
+      ),
   //     GoRoute(
   //       path: AppRoutes.search,
   //       pageBuilder: (context, state) => CustomTransitionPage(
