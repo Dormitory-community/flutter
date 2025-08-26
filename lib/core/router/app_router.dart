@@ -8,8 +8,8 @@ import '../../features/auth/screens/login_screen.dart';
 import '../../features/home/screens/landing_screen.dart';
 import '../../features/home/screens/main_scaffold.dart';
 import '../../features/boards/screens/boards_screen.dart';
-// import '../../features/boards/screens/board_detail_screen.dart';
-// import '../../features/boards/screens/board_write_screen.dart';
+import '../../features/boards/screens/board_detail_screen.dart';
+import '../../features/boards/screens/board_write_screen.dart';
 import '../../features/groups/screens/groups_screen.dart';
 import '../../features/groups/screens/group_detail_screen.dart';
 import '../../features/groups/screens/group_write_screen.dart';
@@ -30,7 +30,7 @@ class AppRoutes {
   static const String signup = '/signup';
   static const String boards = '/boards';
   static const String boardDetail = '/boards/:id';
-  static const String boardWrite = '/write/:type';
+  static const String boardWrite = '/boards/write/:type';
   static const String groups = '/groups';
   static const String groupDetail = '/groups/:id';
   static const String groupWrite = '/groups/write';
@@ -45,6 +45,7 @@ class AppRoutes {
   static const String notices = '/notices';
 
   static String groupDetailPath(String id) => '/groups/$id';
+  static String boardDetailPath(String id) => '/boards/$id';
   static String messageDetailPath(String id) => '/chats/$id';
 }
 
@@ -162,42 +163,42 @@ final routerProvider = Provider<GoRouter>((ref) {
   //         },
   //       ),
   //     ),
-  //     GoRoute(
-  //       path: AppRoutes.boardDetail,
-  //       pageBuilder: (context, state) {
-  //         final id = state.pathParameters['id']!;
-  //         return CustomTransitionPage(
-  //           child: BoardDetailScreen(id: id),
-  //           transitionDuration: const Duration(milliseconds: 300),
-  //           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //             return SlideTransition(
-  //               position: animation.drive(
-  //                 Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
-  //               ),
-  //               child: child,
-  //             );
-  //           },
-  //         );
-  //       },
-  //     ),
-  //     GoRoute(
-  //       path: AppRoutes.boardWrite,
-  //       pageBuilder: (context, state) {
-  //         final type = state.pathParameters['type']!;
-  //         return CustomTransitionPage(
-  //           child: BoardWriteScreen(type: type),
-  //           transitionDuration: const Duration(milliseconds: 300),
-  //           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //             return SlideTransition(
-  //               position: animation.drive(
-  //                 Tween(begin: const Offset(0.0, 1.0), end: Offset.zero),
-  //               ),
-  //               child: child,
-  //             );
-  //           },
-  //         );
-  //       },
-  //     ),
+      GoRoute(
+        path: AppRoutes.boardDetail,
+        pageBuilder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return CustomTransitionPage(
+            child: BoardDetailScreen(id: id),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return SlideTransition(
+                position: animation.drive(
+                  Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
+                ),
+                child: child,
+              );
+            },
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.boardWrite,
+        pageBuilder: (context, state) {
+          final type = state.pathParameters['type']!;
+          return CustomTransitionPage(
+            child: BoardWriteScreen(type: type),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return SlideTransition(
+                position: animation.drive(
+                  Tween(begin: const Offset(0.0, 1.0), end: Offset.zero),
+                ),
+                child: child,
+              );
+            },
+          );
+        },
+      ),
       GoRoute(
         path: AppRoutes.groupDetail,
         pageBuilder: (context, state) {

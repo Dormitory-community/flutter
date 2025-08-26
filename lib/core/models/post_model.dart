@@ -274,8 +274,7 @@ class PostListModel {
 enum PostCategory {
   free('자유게시판', 'free'),
   info('정보 공유', 'info'),
-  counseling('고민 상담', 'counseling'),
-  notice('공지사항', 'notice');
+  counseling('고민 상담', 'counseling');
 
   const PostCategory(this.displayName, this.value);
 

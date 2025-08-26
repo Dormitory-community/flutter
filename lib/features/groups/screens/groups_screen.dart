@@ -315,14 +315,17 @@ class _GroupsScreenState extends State<GroupsScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: !isLargeScreen
-          ? FloatingActionButton.extended(
-        onPressed: () => context.go(AppRoutes.groupWrite),
-        icon: const Icon(Icons.edit),
-        label: const Text('글쓰기'),
-        backgroundColor: const Color(0xFF8b5cf6),
-        foregroundColor: Colors.white,
+          ? SizedBox(
+          height: 40,
+          child: FloatingActionButton.extended(
+            onPressed: () => context.go(AppRoutes.groupWrite),
+            icon: const Icon(Icons.edit, size: 16),
+            label: const Text('글쓰기', style: TextStyle(fontSize: 12)),
+            backgroundColor: const Color(0xFF8b5cf6),
+            foregroundColor: Colors.white,
+          )
       )
-          : null,
+              : null,
     );
   }
 }

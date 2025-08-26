@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/router/app_router.dart';
-import '../../../core/providers/theme_provider.dart';
-import '../../../core/providers/auth_provider.dart';
+// import '../../../core/providers/theme_provider.dart';
 import '../widgets/app_header.dart';
 import '../widgets/notification_banner.dart';
 
@@ -58,10 +57,10 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final themeMode = ref.watch(themeModeProvider);
-    final isDark = themeMode == ThemeMode.dark ||
-        (themeMode == ThemeMode.system &&
-            MediaQuery.of(context).platformBrightness == Brightness.dark);
+    // final themeMode = ref.watch(themeModeProvider);
+    // final isDark = themeMode == ThemeMode.dark ||
+    //     (themeMode == ThemeMode.system &&
+    //         MediaQuery.of(context).platformBrightness == Brightness.dark);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,

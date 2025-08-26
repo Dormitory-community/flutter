@@ -7,7 +7,6 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'core/config/app_config.dart';
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
-import 'core/providers/auth_provider.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/utils/timeago_localization.dart';
 import 'core/utils/url_strategy_helper.dart'; // 헬퍼 import
