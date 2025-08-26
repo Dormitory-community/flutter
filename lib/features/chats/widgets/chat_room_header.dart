@@ -49,26 +49,24 @@ class _ChatRoomsHeaderState extends State<ChatRoomsHeader>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Header
-        Container(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top,
-            left: 16,
-            right: 16,
-            bottom: 8,
-          ),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            border: Border(
-              bottom: BorderSide(
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-                width: 0.5,
+    return SizedBox(
+      height: 60,
+      child: Stack(
+        children: [
+          // Header
+          Container(
+            width: double.infinity,
+            height: 60,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                  width: 0.5,
+                ),
               ),
             ),
-          ),
-          child: SafeArea(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -81,148 +79,163 @@ class _ChatRoomsHeaderState extends State<ChatRoomsHeader>
                 IconButton(
                   icon: Icon(
                     Icons.settings,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                   onPressed: _toggleDrawer,
+                  padding: const EdgeInsets.all(8),
+                  constraints: const BoxConstraints(
+                    minWidth: 40,
+                    minHeight: 40,
+                  ),
                 ),
               ],
             ),
           ),
-        ),
 
-        // Overlay
-        if (_isDrawerOpen)
-          GestureDetector(
-            onTap: _toggleDrawer,
-            child: Container(
-              color: Colors.black.withOpacity(0.5),
-              child: const SizedBox.expand(),
-            ),
-          ),
-
-        // Drawer
-        AnimatedBuilder(
-          animation: _slideAnimation,
-          builder: (context, child) {
-            return SlideTransition(
-              position: _slideAnimation,
-              child: Align(
-                alignment: Alignment.centerRight,
+          // Overlay
+          if (_isDrawerOpen)
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: _toggleDrawer,
                 child: Container(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      bottomLeft: Radius.circular(16),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(-2, 0),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      // Handle
-                      Container(
-                        margin: const EdgeInsets.only(top: 8, bottom: 8),
-                        width: 48,
-                        height: 6,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                      ),
-
-                      // Header
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.arrow_back),
-                              onPressed: _toggleDrawer,
-                            ),
-                            Expanded(
-                              child: Text(
-                                '설정',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 48), // Balance for back button
-                          ],
-                        ),
-                      ),
-
-                      Divider(
-                        color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-                      ),
-
-                      // Content
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Section Title
-                              Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Text(
-                                  '쪽지',
-                                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-
-                              Divider(
-                                color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-                              ),
-
-                              // Options
-                              ListTile(
-                                title: const Text('차단한 쪽지함 관리'),
-                                onTap: () {
-                                  _toggleDrawer();
-                                  // Navigate to blocked messages
-                                },
-                                trailing: Icon(
-                                  Icons.chevron_right,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                                ),
-                              ),
-
-                              ListTile(
-                                title: const Text('수신 및 발신 설정'),
-                                onTap: () {
-                                  _toggleDrawer();
-                                  // Navigate to notification settings
-                                },
-                                trailing: Icon(
-                                  Icons.chevron_right,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  color: Colors.black.withOpacity(0.5),
                 ),
               ),
-            );
-          },
-        ),
-      ],
+            ),
+
+          // Drawer
+          AnimatedBuilder(
+            animation: _slideAnimation,
+            builder: (context, child) {
+              return SlideTransition(
+                position: _slideAnimation,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        bottomLeft: Radius.circular(16),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(-2, 0),
+                        ),
+                      ],
+                    ),
+                    child: SafeArea(
+                      child: Column(
+                        children: [
+                          // Handle
+                          Container(
+                            margin: const EdgeInsets.only(top: 8, bottom: 8),
+                            width: 48,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                          ),
+
+                          // Header
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.arrow_back),
+                                  onPressed: _toggleDrawer,
+                                  padding: const EdgeInsets.all(8),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 40,
+                                    minHeight: 40,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    '설정',
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 48), // Balance for back button
+                              ],
+                            ),
+                          ),
+
+                          Divider(
+                            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                          ),
+
+                          // Content
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Section Title
+                                  Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Text(
+                                      '쪽지',
+                                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+
+                                  Divider(
+                                    color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                                  ),
+
+                                  // Options
+                                  ListTile(
+                                    title: const Text('차단한 쪽지함 관리'),
+                                    onTap: () {
+                                      _toggleDrawer();
+                                      // Navigate to blocked messages
+                                    },
+                                    trailing: Icon(
+                                      Icons.chevron_right,
+                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                                    ),
+                                  ),
+
+                                  ListTile(
+                                    title: const Text('수신 및 발신 설정'),
+                                    onTap: () {
+                                      _toggleDrawer();
+                                      // Navigate to notification settings
+                                    },
+                                    trailing: Icon(
+                                      Icons.chevron_right,
+                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                                    ),
+                                  ),
+
+                                  const Spacer(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

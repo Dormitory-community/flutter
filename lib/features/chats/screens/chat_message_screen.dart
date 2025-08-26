@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/models/chat_room_model.dart';
 import '../../../core/providers/chat_provider.dart';
@@ -24,10 +25,6 @@ class _ChatMessageScreenState extends ConsumerState<ChatMessageScreen> {
   final ImagePicker _imagePicker = ImagePicker();
 
   List<XFile> _selectedImages = [];
-
-  static const double _headerHeight = 70;
-  static const double _inputHeight = 70;
-  static const double _imagePreviewHeight = 80;
 
   @override
   void initState() {
@@ -52,99 +49,115 @@ class _ChatMessageScreenState extends ConsumerState<ChatMessageScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: chatRoomsState.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) =>
-            Center(child: Text('채팅방 정보를 불러올 수 없습니다: $error')),
-        data: (chatRooms) {
-          final chatRoom = chatRooms.firstWhere(
-                (room) => room.id == widget.chatRoomId,
-            orElse: () => ChatRoom(
-              id: widget.chatRoomId,
-              name: '알 수 없는 채팅방',
-              lastMessage: '',
-              lastMessageTime: DateTime.now(),
-              participants: [],
-            ),
-          );
-
-          return Stack(
-            children: [
-              // 메시지 리스트
-              Positioned.fill(
-                top: _headerHeight,
-                bottom: _inputHeight + (_selectedImages.isNotEmpty ? _imagePreviewHeight : 0),
-                child: messagesState.when(
-                  loading: () => const Center(child: CircularProgressIndicator()),
-                  error: (error, stackTrace) =>
-                      Center(child: Text('메시지를 불러올 수 없습니다: $error')),
-                  data: (messages) => ListView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      final message = messages[index];
-                      return _MessageBubble(
-                        message: message,
-                        isCurrentUser: message.senderId == 'currentUser',
-                      );
-                    },
-                  ),
-                ),
+      body: SafeArea(
+        child: chatRoomsState.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stackTrace) =>
+              Center(child: Text('채팅방 정보를 불러올 수 없습니다: $error')),
+          data: (chatRooms) {
+            final chatRoom = chatRooms.firstWhere(
+                  (room) => room.id == widget.chatRoomId,
+              orElse: () => ChatRoom(
+                id: widget.chatRoomId,
+                name: '알 수 없는 채팅방',
+                lastMessage: '',
+                lastMessageTime: DateTime.now(),
+                participants: [],
               ),
+            );
 
-              // 헤더
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                height: _headerHeight,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-                        width: 0.5,
-                      ),
+            return Column(
+              children: [
+                // 헤더
+                _buildHeader(context, chatRoom.name),
+
+                // 메시지 리스트
+                Expanded(
+                  child: messagesState.when(
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (error, stackTrace) =>
+                        Center(child: Text('메시지를 불러올 수 없습니다: $error')),
+                    data: (messages) => ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        final message = messages[index];
+                        return _MessageBubble(
+                          message: message,
+                          isCurrentUser: message.senderId == 'currentUser',
+                        );
+                      },
                     ),
                   ),
-                  child: Text(
-                    chatRoom.name,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-              ),
-
-              // 이미지 미리보기
-              if (_selectedImages.isNotEmpty)
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: _inputHeight,
-                  height: _imagePreviewHeight,
-                  child: _buildImagePreview(),
                 ),
 
-              // 메시지 입력창
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                height: _inputHeight,
-                child: _buildMessageInput(),
+                // 이미지 미리보기
+                if (_selectedImages.isNotEmpty) _buildImagePreview(),
+
+                // 메시지 입력창
+                _buildMessageInput(),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, String roomName) {
+    return Container(
+      height: 60,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => context.pop(),
+            padding: const EdgeInsets.all(8),
+            constraints: const BoxConstraints(
+              minWidth: 40,
+              minHeight: 40,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              roomName,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
               ),
-            ],
-          );
-        },
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              // 메뉴 기능 추가
+            },
+            padding: const EdgeInsets.all(8),
+            constraints: const BoxConstraints(
+              minWidth: 40,
+              minHeight: 40,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildImagePreview() {
     return Container(
+      height: 80,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       color: Theme.of(context).colorScheme.surface,
       child: ListView.builder(
@@ -160,14 +173,14 @@ class _ChatMessageScreenState extends ConsumerState<ChatMessageScreen> {
                   borderRadius: BorderRadius.circular(8),
                   child: Image.file(
                     File(image.path),
-                    width: 80,
-                    height: 80,
+                    width: 64,
+                    height: 64,
                     fit: BoxFit.cover,
                   ),
                 ),
                 Positioned(
-                  top: 4,
-                  right: 4,
+                  top: 2,
+                  right: 2,
                   child: GestureDetector(
                     onTap: () => _removeImage(index),
                     child: Container(
@@ -180,7 +193,7 @@ class _ChatMessageScreenState extends ConsumerState<ChatMessageScreen> {
                       child: const Icon(
                         Icons.close,
                         color: Colors.white,
-                        size: 14,
+                        size: 12,
                       ),
                     ),
                   ),
@@ -195,7 +208,12 @@ class _ChatMessageScreenState extends ConsumerState<ChatMessageScreen> {
 
   Widget _buildMessageInput() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 8,
+        bottom: MediaQuery.of(context).padding.bottom + 8,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         border: Border(
@@ -206,6 +224,7 @@ class _ChatMessageScreenState extends ConsumerState<ChatMessageScreen> {
         ),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           IconButton(
             icon: Icon(
@@ -213,10 +232,16 @@ class _ChatMessageScreenState extends ConsumerState<ChatMessageScreen> {
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
             ),
             onPressed: _pickImages,
+            padding: const EdgeInsets.all(8),
+            constraints: const BoxConstraints(
+              minWidth: 40,
+              minHeight: 40,
+            ),
           ),
+          const SizedBox(width: 8),
           Expanded(
             child: Container(
-              constraints: const BoxConstraints(maxHeight: 100),
+              constraints: const BoxConstraints(maxHeight: 120),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.background,
                 borderRadius: BorderRadius.circular(20),
@@ -272,7 +297,7 @@ class _ChatMessageScreenState extends ConsumerState<ChatMessageScreen> {
   Future<void> _pickImages() async {
     try {
       final images = await _imagePicker.pickMultiImage();
-      if (images != null && images.isNotEmpty) {
+      if (images.isNotEmpty) {
         setState(() {
           _selectedImages.addAll(images);
         });
