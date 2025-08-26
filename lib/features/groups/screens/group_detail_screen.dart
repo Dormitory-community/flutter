@@ -12,6 +12,7 @@ class GroupDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     // 샘플 데이터 - 실제로는 id를 기반으로 데이터를 가져올 것
     final sampleGroups = {
       '1': {
@@ -154,10 +155,17 @@ class GroupDetailScreen extends StatelessWidget {
                                 backgroundColor: const Color(0xFF8b5cf6),
                                 labelStyle: const TextStyle(color: Colors.white),
                               ),
-                              ...(group['tags']! as List<String>).map((tag) => Chip(
-                                label: Text(tag),
-                                backgroundColor: Colors.grey[200],
-                              )),
+                              ...(group['tags']! as List<String>).map((tag) => Chip(                                label: Text(tag),
+                                backgroundColor: theme.brightness == Brightness.dark
+                                    ? Colors.grey[700]
+                                    : Colors.grey[200],
+                                labelStyle: TextStyle(
+                                  color: theme.brightness == Brightness.dark
+                                      ? theme.colorScheme.onSurface
+                                      : Colors.grey[700],
+                                  )
+                                ),
+                              )
                             ],
                           ),
                         ],

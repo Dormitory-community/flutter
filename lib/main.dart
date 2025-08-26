@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart'; // 추가
 
 import 'core/config/app_config.dart';
 import 'core/theme/app_theme.dart';
@@ -12,6 +13,7 @@ import 'core/providers/theme_provider.dart';
 import 'core/utils/timeago_localization.dart';
 
 void main() async {
+  usePathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
 
   // 환경 변수 검증

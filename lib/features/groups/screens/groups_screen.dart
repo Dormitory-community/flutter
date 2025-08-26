@@ -235,7 +235,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                             final group = _paginatedGroups[index];
                             return StudyGroupCard(
                               studyGroup: group,
-                              onTap: () => context.go('${AppRoutes.groupDetail}/${group.id}'),
+                                onTap: () => context.go(AppRoutes.groupDetailPath(group.id))
                             );
                           },
                         )
@@ -313,6 +313,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: !isLargeScreen
           ? FloatingActionButton.extended(
         onPressed: () => context.go(AppRoutes.groupWrite),

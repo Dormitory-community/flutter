@@ -9,22 +9,41 @@ class PostCard extends StatelessWidget {
     super.key,
     required this.post,
     this.onTap,
-    this.onCategoryTap,
+    this.onCategoryTap, // 선택적: 카테고리 탭 콜백
     this.showCategory = false,
     this.dense = false,
+    this.showBorder = false, // 추가: 테두리 표시 여부
+    this.borderColor,
+    this.borderWidth = 1.0,
   });
 
   final PostListModel post;
   final VoidCallback? onTap;
-  final VoidCallback? onCategoryTap; // 선택적: 카테고리 탭 콜백
+  final VoidCallback? onCategoryTap;
   final bool showCategory;
   final bool dense;
 
+  // Border options
+  final bool showBorder;
+  final Color? borderColor;
+  final double borderWidth;
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final effectiveShowBorder = showBorder || isDarkMode; // 다크 모드에서 항상 테두리 표시
+    final effectiveBorderColor = borderColor ?? theme.colorScheme.outline;
+
     return Card(
       margin: dense ? const EdgeInsets.only(bottom: 12) : const EdgeInsets.only(bottom: 16),
-      elevation: dense ? 1 : 2,
+      elevation: effectiveShowBorder ? 0 : (dense ? 1 : 2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: effectiveShowBorder
+            ? BorderSide(color: effectiveBorderColor, width: borderWidth)
+            : BorderSide.none,
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
@@ -238,11 +257,11 @@ class PostCard extends StatelessWidget {
                       ),
                       child: Text(
                         post.category,
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontSize: dense ? 10 : 11,
                           fontWeight: FontWeight.w500,
-                          ),
+                        ),
                       ),
                     ),
                 ],

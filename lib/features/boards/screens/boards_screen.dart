@@ -122,7 +122,6 @@ class BoardsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final posts = ref.watch(postsProvider);
-
     final selectedCategory = ref.watch(selectedCategoryProvider);
 
     final categories = ['전체', '자유게시판', '정보 공유', '고민 상담'];
@@ -131,51 +130,94 @@ class BoardsScreen extends ConsumerWidget {
         ? posts
         : posts.where((post) => post.category == selectedCategory).toList();
 
+    final theme = Theme.of(context);
+    final isLargeScreen = MediaQuery.of(context).size.width > 900; // PC 기준 (원하면 값 조절)
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: theme.colorScheme.background,
+      // 모바일에서만 중앙 하단 FAB 노출
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: !isLargeScreen
+          ? SizedBox(
+        height: 40,
+        child: FloatingActionButton.extended(
+          onPressed: () => _showWriteOptions(context),
+          icon: const Icon(Icons.edit, size: 16),
+          label: const Text('글쓰기', style: TextStyle(fontSize: 12)),
+          backgroundColor: theme.colorScheme.primary,
+          foregroundColor: Colors.white,
+        ),
+      )
+          : null,
       body: Column(
         children: [
           // Category Filter (centered and constrained to max width)
           Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: _maxContentWidth),
-              child: Container(
+              child: SizedBox(
                 height: 60,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final category = categories[index];
-                    final isSelected = category == selectedCategory;
+                child: Row(
+                  children: [
+                    // 카테고리 리스트 (왼쪽에 차지)
+                    Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) {
+                          final category = categories[index];
+                          final isSelected = category == selectedCategory;
 
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: FilterChip(
-                        label: Text(category),
-                        selected: isSelected,
-                        onSelected: (selected) {
-                          ref.read(selectedCategoryProvider.notifier).state = category;
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: FilterChip(
+                              label: Text(category),
+                              selected: isSelected,
+                              onSelected: (selected) {
+                                ref.read(selectedCategoryProvider.notifier).state =
+                                    category;
+                              },
+                              backgroundColor: theme.colorScheme.surface,
+                              selectedColor: theme.colorScheme.surface,
+                              checkmarkColor: theme.colorScheme.primary,
+                              side: BorderSide(
+                                color: isSelected
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.outline,
+                                width: 1.2,
+                              ),
+                              labelStyle: TextStyle(
+                                color: isSelected
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.onSurface,
+                                fontWeight:
+                                isSelected ? FontWeight.w600 : FontWeight.w500,
+                              ),
+                            ),
+                          );
                         },
-                        backgroundColor: Theme.of(context).colorScheme.surface,
-                        selectedColor: Theme.of(context).colorScheme.surface,   // 선택시에도 배경 변화 없음
-                        checkmarkColor: Theme.of(context).colorScheme.primary,
-                        side: BorderSide(
-                          color: isSelected
-                              ? Theme.of(context).colorScheme.primary // 선택 시 테두리 색
-                              : Theme.of(context).colorScheme.outline, // 비선택 시 테두리 색
-                          width: 1.2,
-                        ),
-                        labelStyle: TextStyle(
-                          color: isSelected
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onSurface,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      ),
+                    ),
+
+                    // PC(큰 화면)에서는 필터 영역 제일 오른쪽에 글쓰기 버튼 추가
+                    if (isLargeScreen) ...[
+                      const SizedBox(width: 12),
+                      ElevatedButton.icon(
+                        onPressed: () => _showWriteOptions(context),
+                        icon: const Icon(Icons.edit, size: 18),
+                        label: const Text('글쓰기'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.primary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
                         ),
                       ),
-                    );
-                  },
+                    ],
+                  ],
                 ),
               ),
             ),
@@ -216,79 +258,75 @@ class BoardsScreen extends ConsumerWidget {
           ),
         ],
       ),
-      floatingActionButton: SizedBox(
-        height: 40,                // 버튼 높이
-        // width 생략하면 내부 콘텐츠에 따라 결정
-        child: FloatingActionButton.extended(
-          onPressed: () => _showWriteOptions(context),
-          icon: const Icon(Icons.edit, size: 16),
-          label: const Text('글쓰기', style: TextStyle(fontSize: 12)),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Colors.white,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
   void _showWriteOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(2),
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color:
+                  Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              '게시글 작성',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600,
+              const SizedBox(height: 20),
+              Text(
+                '게시글 작성',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            _WriteOptionTile(
-              icon: Icons.chat_bubble_outline,
-              title: '자유게시판',
-              subtitle: '자유로운 소통과 일상 이야기',
-              onTap: () {
-                Navigator.pop(context);
-                context.push(AppRoutes.boardWrite.replaceAll(':type', 'free'));
-              },
-            ),
-            const SizedBox(height: 12),
-            _WriteOptionTile(
-              icon: Icons.info_outline,
-              title: '정보 공유',
-              subtitle: '유용한 정보와 팁 공유',
-              onTap: () {
-                Navigator.pop(context);
-                context.push(AppRoutes.boardWrite.replaceAll(':type', 'info'));
-              },
-            ),
-            const SizedBox(height: 12),
-            _WriteOptionTile(
-              icon: Icons.psychology_outlined,
-              title: '고민 상담',
-              subtitle: '고민과 조언을 나누는 공간',
-              onTap: () {
-                Navigator.pop(context);
-                context.push(AppRoutes.boardWrite.replaceAll(':type', 'counseling'));
-              },
-            ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
-          ],
+              const SizedBox(height: 24),
+              _WriteOptionTile(
+                icon: Icons.chat_bubble_outline,
+                title: '자유게시판',
+                subtitle: '자유로운 소통과 일상 이야기',
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push(AppRoutes.boardWrite.replaceAll(':type', 'free'));
+                },
+              ),
+              const SizedBox(height: 12),
+              _WriteOptionTile(
+                icon: Icons.info_outline,
+                title: '정보 공유',
+                subtitle: '유용한 정보와 팁 공유',
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push(AppRoutes.boardWrite.replaceAll(':type', 'info'));
+                },
+              ),
+              const SizedBox(height: 12),
+              _WriteOptionTile(
+                icon: Icons.psychology_outlined,
+                title: '고민 상담',
+                subtitle: '고민과 조언을 나누는 공간',
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push(
+                      AppRoutes.boardWrite.replaceAll(':type', 'counseling'));
+                },
+              ),
+              SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
+            ],
+          ),
         ),
       ),
     );
@@ -326,7 +364,10 @@ class _WriteOptionTile extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+                color: Theme.of(context)
+                    .colorScheme
+                    .primaryContainer
+                    .withOpacity(0.3),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -350,7 +391,10 @@ class _WriteOptionTile extends StatelessWidget {
                   Text(
                     subtitle,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
                     ),
                   ),
                 ],
@@ -359,7 +403,8 @@ class _WriteOptionTile extends StatelessWidget {
             Icon(
               Icons.arrow_forward_ios,
               size: 16,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              color:
+              Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
             ),
           ],
         ),

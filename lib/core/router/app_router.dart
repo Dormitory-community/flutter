@@ -43,12 +43,15 @@ class AppRoutes {
   static const String messageDetail = '/my-page/chat/:id';
   static const String search = '/search';
   static const String notices = '/notices';
+
+  static String groupDetailPath(String id) => '/groups/$id';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
 
   return GoRouter(
+    // debugLogDiagnostics: true,
     initialLocation: AppRoutes.landing,
     redirect: (context, state) {
       final isAuthenticated = authState.value != null;

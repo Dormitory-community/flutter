@@ -15,11 +15,20 @@ class StudyGroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Card(
-      elevation: 2,
+      elevation: isDarkMode ? 0 : 2,
       shadowColor: Colors.black26,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(
+          color: isDarkMode
+              ? theme.colorScheme.outline
+              : theme.colorScheme.outline.withOpacity(0.5), // Lighter border in light mode
+          width: 1,
+        ),
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
