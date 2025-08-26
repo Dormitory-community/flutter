@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart'; // 추가
 
 import 'core/config/app_config.dart';
 import 'core/theme/app_theme.dart';
@@ -11,9 +10,12 @@ import 'core/router/app_router.dart';
 import 'core/providers/auth_provider.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/utils/timeago_localization.dart';
+import 'core/utils/url_strategy_helper.dart'; // 헬퍼 import
 
 void main() async {
-  usePathUrlStrategy();
+  // 웹 URL 전략 설정 (웹에서만)
+  configureUrlStrategy();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   // 환경 변수 검증
