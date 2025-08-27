@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
 import '../../features/auth/screens/login_screen.dart';
-// import '../../features/auth/screens/signup_screen.dart';
 import '../../features/home/screens/landing_screen.dart';
 import '../../features/home/screens/main_scaffold.dart';
 import '../../features/boards/screens/boards_screen.dart';
@@ -13,11 +12,11 @@ import '../../features/boards/screens/board_write_screen.dart';
 import '../../features/groups/screens/groups_screen.dart';
 import '../../features/groups/screens/group_detail_screen.dart';
 import '../../features/groups/screens/group_write_screen.dart';
-// import '../../features/account/screens/my_page_screen.dart';
-// import '../../features/account/screens/posts_screen.dart';
-// import '../../features/account/screens/comments_screen.dart';
-// import '../../features/account/screens/bookmarks_screen.dart';
-// import '../../features/account/screens/privacy_screen.dart';
+import '../../features/profile/screens/mypage_screen.dart';
+// import '../../features/profile/screens/posts_screen.dart';
+// import '../../features/profile/screens/comments_screen.dart';
+// import '../../features/profile/screens/bookmarks_screen.dart';
+// import '../../features/profile/screens/privacy_screen.dart';
 import '../../features/chats/screens/chat_room_screen.dart';
 import '../../features/chats/screens/chat_message_screen.dart';
 // import '../../features/search/screens/search_screen.dart';
@@ -117,12 +116,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               child: GroupsScreen(),
             ),
           ),
-          // GoRoute(
-          //   path: AppRoutes.myPage,
-          //   pageBuilder: (context, state) => const NoTransitionPage(
-          //     child: MyPageScreen(),
-          //   ),
-          // ),
+          GoRoute(
+            path: AppRoutes.myPage,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: MyPageScreen(),
+            ),
+          ),
           GoRoute(
             path: AppRoutes.chatRooms,
             pageBuilder: (context, state) => const NoTransitionPage(
