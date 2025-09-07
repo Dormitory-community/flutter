@@ -34,6 +34,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.listen<AsyncValue>(authProvider, (previous, next) {
       if (next.value != null && context.mounted) {
         context.go(AppRoutes.landing);
+      } else if (next.hasError && context.mounted) {
+        // 에러 처리
+        final error = next.error.toString();
+        _showErrorMessage(error);
       }
     });
 
@@ -233,6 +237,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _handleKakaoLogin() async {
+    if (_isLoading) return;
+
     setState(() {
       _isLoading = true;
     });
@@ -241,12 +247,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await ref.read(authProvider.notifier).signInWithKakao();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('카카오 로그인 실패: ${e.toString()}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        _showErrorMessage(e.toString());
       }
     } finally {
       if (mounted) {
@@ -258,7 +259,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _handleEmailLogin() async {
-    if (!_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validate() || _isLoading) {
       return;
     }
 
@@ -273,12 +274,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('로그인 실패: ${e.toString()}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        _showErrorMessage(e.toString());
       }
     } finally {
       if (mounted) {
@@ -287,5 +283,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         });
       }
     }
+  }
+
+  void _showErrorMessage(String error) {
+    String message = '로그인에 실패했습니다';
+
+    if (error.contains('cancelled') || error.contains('canceled')) {
+      message = '로그인이 취소되었습니다';
+    } else if (error.contains('network')) {
+      message = '네트워크 연결을 확인해주세요';
+    } else if (error.contains('Invalid login credentials')) {
+      message = '이메일 또는 비밀번호가 올바르지 않습니다';
+    } else if (error.contains('Email not confirmed')) {
+      message = '이메일 인증이 완료되지 않았습니다';
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 }
