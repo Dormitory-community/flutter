@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:flutter/foundation.dart'; // kIsWeb 사용
+
 
 import 'core/config/app_config.dart';
 import 'core/theme/app_theme.dart';
@@ -35,7 +37,11 @@ void main() async {
   );
 
   // Kakao SDK 초기화
-  KakaoSdk.init(nativeAppKey: AppConfig.kakaoNativeAppKey);
+  if (kIsWeb) {
+    KakaoSdk.init(javaScriptAppKey: AppConfig.kakaoJavaScriptAppKey);
+  } else {
+    KakaoSdk.init(nativeAppKey: AppConfig.kakaoNativeAppKey);
+  }
 
   // 시간 현지화 초기화
   TimeagoLocalization.initialize();

@@ -2,23 +2,23 @@ class AppConfig {
   // Supabase Configuration
   static const String supabaseUrl = String.fromEnvironment(
     'SUPABASE_URL',
-    defaultValue: 'YOUR_SUPABASE_URL',
+    // defaultValue: 'YOUR_SUPABASE_URL',
   );
 
   static const String supabaseAnonKey = String.fromEnvironment(
     'SUPABASE_ANON_KEY',
-    defaultValue: 'YOUR_SUPABASE_ANON_KEY',
+    // defaultValue: 'YOUR_SUPABASE_ANON_KEY',
   );
 
   // Kakao SDK Configuration
   static const String kakaoNativeAppKey = String.fromEnvironment(
     'KAKAO_NATIVE_APP_KEY',
-    defaultValue: 'YOUR_KAKAO_NATIVE_APP_KEY',
+    // defaultValue: 'YOUR_KAKAO_NATIVE_APP_KEY',
   );
 
   static const String kakaoJavaScriptAppKey = String.fromEnvironment(
     'KAKAO_JAVASCRIPT_APP_KEY',
-    defaultValue: 'YOUR_KAKAO_JAVASCRIPT_APP_KEY',
+    // defaultValue: 'YOUR_KAKAO_JAVASCRIPT_APP_KEY',
   );
 
   // App Information
@@ -78,8 +78,8 @@ class AppConfig {
   }
 
   static bool get isValidKakaoConfig {
-    return kakaoNativeAppKey != 'YOUR_KAKAO_NATIVE_APP_KEY' &&
-        kakaoNativeAppKey.isNotEmpty;
+    return kakaoNativeAppKey.isNotEmpty && kakaoJavaScriptAppKey.isNotEmpty;
+
   }
 
   // Helper methods for configuration validation

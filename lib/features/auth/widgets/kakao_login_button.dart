@@ -5,13 +5,17 @@ class KakaoLoginButton extends StatelessWidget {
     super.key,
     this.onPressed,
     this.isLoading = false,
+    this.text, // 커스텀 텍스트를 위한 옵션
   });
 
   final VoidCallback? onPressed;
   final bool isLoading;
+  final String? text; // null이면 기본 로그인 텍스트 사용
 
   @override
   Widget build(BuildContext context) {
+    final buttonText = text ?? '카카오톡으로 3초만에 로그인';
+
     return SizedBox(
       width: double.infinity,
       height: 50,
@@ -59,9 +63,9 @@ class KakaoLoginButton extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            const Text(
-              '카카오톡으로 3초만에 로그인',
-              style: TextStyle(
+            Text(
+              buttonText,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),

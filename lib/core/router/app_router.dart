@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
 import '../../features/auth/screens/login_screen.dart';
+import '../../features/auth/screens/signup_screen.dart';
 import '../../features/home/screens/landing_screen.dart';
 import '../../features/home/screens/main_scaffold.dart';
 import '../../features/boards/screens/boards_screen.dart';
@@ -147,21 +148,21 @@ final routerProvider = Provider<GoRouter>((ref) {
           },
         ),
       ),
-  //     GoRoute(
-  //       path: AppRoutes.signup,
-  //       pageBuilder: (context, state) => CustomTransitionPage(
-  //         child: const SignupScreen(),
-  //         transitionDuration: const Duration(milliseconds: 300),
-  //         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //           return SlideTransition(
-  //             position: animation.drive(
-  //               Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
-  //             ),
-  //             child: child,
-  //           );
-  //         },
-  //       ),
-  //     ),
+      GoRoute(
+        path: AppRoutes.signup,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const SignupScreen(),
+          transitionDuration: const Duration(milliseconds: 300),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SlideTransition(
+              position: animation.drive(
+                Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
+              ),
+              child: child,
+            );
+          },
+        ),
+      ),
       GoRoute(
         path: AppRoutes.boardDetail,
         pageBuilder: (context, state) {
