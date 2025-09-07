@@ -20,7 +20,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<UserModel?>> {
   // TODO: 앱 스킴/리다이렉트 URI를 실제 값으로 바꾸세요.
   // 예: 'io.yourapp://login-callback' (Android/iOS 앱 스킴)
   // 웹은 null(또는 Supabase에서 관리하는 콜백)을 사용합니다.
-  static const String kRedirectUriAndroidIos = 'io.yourapp://login-callback';
+  static const String kRedirectUriAndroidIos = 'livinglogos://login-callback';
 
   void _init() {
     if (_isInitialized) return;
